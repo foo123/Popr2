@@ -33,6 +33,32 @@ function offset( el )
 }
 
 var global_handler_added = false;
+var window_resize_added = false;
+
+function popr_adjust( popr, target )
+{
+    var pos = offset( target ), viewPort = viewport( ), 
+        w = popr.outerWidth(), h = popr.outerHeight(),
+        top = pos.top + pos.height, left = pos.left + (pos.width-w)/2
+    ;
+    if ( popr.hasClass('popr_container_top') || top + h > viewPort.t + viewPort.h )
+    {
+        top -= pos.height + h;
+        if ( popr.hasClass('popr_container_bottom') )
+            popr.removeClass('popr_container_bottom').addClass('popr_container_top');
+    }
+    if ( left < viewPort.l )
+    {
+        left = pos.left + pos.width;
+        popr.addClass('popr_container_right');
+    }
+    else if ( left + w > viewPort.l + viewPort.w )
+    {
+        left = pos.left - w;
+        popr.addClass('popr_container_left');
+    }
+    return popr.css({ left:left+'px', top:top+'px' });
+}
 
 $.fn.popr2 = function( options ) {
     var set = $.extend( {
@@ -65,32 +91,19 @@ $.fn.popr2 = function( options ) {
         var d_m = set.mode, attr_mode = $el.attr('data-popr-mode');
         if ( !!attr_mode ) d_m = attr_mode;
 
-        var popr_cont = $('<div class="popr_container popr_container_' + d_m + '"><div class="popr_point"><div class="popr_content">' + $('#' + $el.attr(set.attribute)).html( ) + '</div></div></div>').appendTo('body');
-
-        var pos = offset( el ), viewPort = viewport( ), 
-            w = popr_cont.outerWidth(), h = popr_cont.outerHeight()/* + 39*/,
-            top = pos.top + pos.height, left = pos.left + (pos.width-w)/2
-        ;
-        if ( 'top' == d_m || top + h > viewPort.t + viewPort.h )
-        {
-            top -= pos.height + h;
-            if ( 'bottom' == d_m )
-            {
-                d_m = 'top';
-                popr_cont.removeClass('popr_container_bottom').addClass('popr_container_top');
-            }
-        }
-        if ( left + w > viewPort.l + viewPort.w )
-        {
-            left -= w;
-        }
-        popr_cont.css({ left:left+'px', top:top+'px' }).fadeIn( set.speed );
+        var popr = $('<div class="popr_container popr_container_' + d_m + '"><div class="popr_content">' + $('#' + $el.attr(set.attribute)).html( ) + '</div></div>').appendTo('body');
+        popr[0]._popr_target = el;
+        
+        popr_adjust( popr, el ).fadeIn( set.speed );
         
         if ( !global_handler_added )
         {
             $('body').on('mouseup.popr2 keyup.popr2', function popr_hide( evt ){
                 // outside click or ESC key pressed
-                if ( 'mouseup' === evt.type || 27 === evt.which )
+                var $el = $(evt.target);
+                if ( ('keyup' === evt.type && 27 === evt.which) ||
+                    ('mouseup' === evt.type && ($el.parent('.popr_content').length || !$el.closest('.popr_container').length)) 
+                )
                 {
                     $('body').off('mouseup.popr2 keyup.popr2');
                     global_handler_added = false;
@@ -102,5 +115,15 @@ $.fn.popr2 = function( options ) {
             global_handler_added = true;
         }
     });
+    
+    /*if ( !window_resize_added )
+    {
+        $('window').on('resize.popr2', function popr_resize( evt ){
+            $('.popr_container').each(function( ){
+                popr_adjust( $(this), this._popr_target );
+            });
+        });
+        window_resize_added = true;
+    }*/
 };
 }(jQuery);

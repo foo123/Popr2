@@ -22,63 +22,147 @@ https://github.com/foo123/Popr2
 {
     position: absolute;
     display: none;
-    box-shadow: 2px 2px 5px #f9f9f9;
+    overflow: visible;
     z-index: 1000;
+    border-width: 1px;
+    border-color: #555;
+    border-style: solid;
+    background-color: #fff;
+    color: #333;
+    padding: 10px 4px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px 5px rgba(0,0,0,0.1);
 }
-.popr_container_top
+.popr_container:after,
+.popr_container:before
 {
-    margin-top: -10px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+}
+.popr_container_bottom:not(.popr_container_left):not(.popr_container_right):after
+{
+    bottom: 100%; left: 50%;
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #fff;
+    border-width: 12px;
+    margin-left: -12px;
+}
+.popr_container_bottom:not(.popr_container_left):not(.popr_container_right):before
+{
+    bottom: 100%; left: 50%;
+    border-color: rgba(85, 85, 85, 0);
+    border-bottom-color: #555;
+    border-width: 13px;
+    margin-left: -13px;
+}
+.popr_container_top:not(.popr_container_left):not(.popr_container_right):after
+{
+    top: 100%; left: 50%;
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #fff;
+    border-width: 12px;
+    margin-left: -12px;
+}
+.popr_container_top:not(.popr_container_left):not(.popr_container_right):before
+{
+    top: 100%; left: 50%;
+    border-color: rgba(85, 85, 85, 0);
+    border-top-color: #555;
+    border-width: 13px;
+    margin-left: -13px;
+}
+.popr_container_top.popr_container_left:after,
+.popr_container_bottom.popr_container_left:after,
+.popr_container_left:after
+{
+    left: 100%; top: 50%;
+    border-color: rgba(255, 255, 255, 0);
+    border-left-color: #fff;
+    border-width: 12px;
+    margin-top: -12px;
+}
+.popr_container_top.popr_container_left:before,
+.popr_container_bottom.popr_container_left:before,
+.popr_container_left:before
+{
+    left: 100%; top: 50%;
+    border-color: rgba(85, 85, 85, 0);
+    border-left-color: #555;
+    border-width: 13px;
+    margin-top: -13px;
+}
+.popr_container_top.popr_container_right:after,
+.popr_container_bottom.popr_container_right:after,
+.popr_container_right:after
+{
+    right: 100%; top: 50%;
+    border-color: rgba(255, 255, 255, 0);
+    border-right-color: #fff;
+    border-width: 12px;
+    margin-top: -12px;
+}
+.popr_container_top.popr_container_right:before,
+.popr_container_bottom.popr_container_right:before,
+.popr_container_right:before
+{
+    right: 100%; top: 50%;
+    border-color: rgba(85, 85, 85, 0);
+    border-right-color: #555;
+    border-width: 13px;
+    margin-top: -13px;
+}
+.popr_container_bottom.popr_container_left:after,
+.popr_container_bottom.popr_container_left:before
+{
+    top: 10%;
+}
+.popr_container_bottom.popr_container_right:after,
+.popr_container_bottom.popr_container_right:before
+{
+    top: 10%;
+}
+.popr_container_top.popr_container_left:after,
+.popr_container_top.popr_container_left:before
+{
+    top: 90%;
+}
+.popr_container_top.popr_container_right:after,
+.popr_container_top.popr_container_right:before
+{
+    top: 90%;
 }
 .popr_container_bottom
 {
-    margin-top: 10px;
+    margin-top: 15px;
 }
-.popr_container > .popr_point
+.popr_container_top
 {
-    position: relative;
-    background-color: inherit;
-    border: 1px solid #dcdcdc;
+    margin-top: -15px;
 }
-.popr_container > .popr_point:after,
-.popr_container > .popr_point:before
+.popr_container_bottom.popr_container_left
 {
-    position: absolute; display: block;
-    height: 0; width: 0;
-    pointer-events: none;
-    border: solid transparent;
-    content: "";
+    margin-top: -28px;
+    margin-left: -12px;
 }
-.popr_container_top > .popr_point:after
+.popr_container_top.popr_container_left
 {
-    border-top-color: #fff;
-    border-width: 8px;
-    top: 100%;
-    left: 50%;
-    margin-left: -8px;
+    margin-top: 28px;
+    margin-left: -12px;
 }
-.popr_container_top > .popr_point:before
+.popr_container_bottom.popr_container_right
 {
-    border-top-color: #dcdcdc;
-    border-width: 9px;
-    top: 100%;
-    left: 50%;
-    margin-left: -9px;
+    margin-top: -28px;
+    margin-left: 12px;
 }
-.popr_container_bottom > .popr_point:after
+.popr_container_top.popr_container_right
 {
-    border-bottom-color: #fff;
-    border-width: 8px;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -8px;
-}
-.popr_container_bottom > .popr_point:before
-{
-    border-bottom-color: #dcdcdc;
-    border-width: 9px;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -9px;
+    margin-top: 28px;
+    margin-left: 12px;
 }
 .popr-box
 {
@@ -93,6 +177,8 @@ https://github.com/foo123/Popr2
     margin: 0;
     display: block;
     font: 300 14px/1.7 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    max-height: 200px;
+    overflow-y: auto;
 }
 .popr_content > label,
 .popr_content > a,
