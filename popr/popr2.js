@@ -32,20 +32,33 @@ function offset( el )
     return {top: top, left: left, width: el.offsetWidth, height: el.offsetHeight };
 }
 
+var global_handler_added = false;
+
 $.fn.popr2 = function( options ) {
     var set = $.extend( {
         'selector'     : '.popr',
-        'activate'     : 'click',
         'attribute'    : 'data-popr',
+        'activate'     : 'click',
         'speed'        : 300,
         'mode'         : 'bottom'
-    }, options||{});
+    }, options||{}), activate_type, activate_event;
     set.selector = set.selector || '.popr';
     set.activate = set.activate || 'click';
     set.attribute = set.attribute || 'data-popr';
     
-    $(this).on(set.activate, set.selector, function(event) {
+    if ( 'mouseup' === set.activate )
+    {
+        activate_event = set.activate+'.popr2box';
+        activate_type = set.activate;
+    }
+    else
+    {
+        activate_event = set.activate + '.popr2box mouseup.popr2box';
+        activate_type = set.activate;
+    }
+    $(this).on(activate_event, set.selector, function(event) {
         event.stopPropagation( );
+        if ( activate_type !== event.type ) return false;
         var el = this, $el = $(el);
         $('.popr_container').remove( );
 
@@ -73,16 +86,21 @@ $.fn.popr2 = function( options ) {
         }
         popr_cont.css({ left:left+'px', top:top+'px' }).fadeIn( set.speed );
         
-        $('body').on('mouseup.popr2 keyup.popr2', function popr_hide( evt ){
-            // outside click or ESC key pressed
-            if ( 'mouseup' === evt.type || 27 === evt.which )
-            {
-                $('body').off('mouseup.popr2 keyup.popr2');
-                setTimeout(function( ) {
-                    $('.popr_container').remove( );
-                }, 40);
-            }
-        });
+        if ( !global_handler_added )
+        {
+            $('body').on('mouseup.popr2 keyup.popr2', function popr_hide( evt ){
+                // outside click or ESC key pressed
+                if ( 'mouseup' === evt.type || 27 === evt.which )
+                {
+                    $('body').off('mouseup.popr2 keyup.popr2');
+                    global_handler_added = false;
+                    setTimeout(function( ) {
+                        $('.popr_container').remove( );
+                    }, 40);
+                }
+            });
+            global_handler_added = true;
+        }
     });
 };
 }(jQuery);
