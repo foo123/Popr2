@@ -65,7 +65,7 @@ $.fn.popr2 = function( options ) {
         'selector'     : '.popr',
         'attribute'    : 'data-popr',
         'activate'     : 'click',
-        'speed'        : 300,
+        'class'        : '',
         'mode'         : 'bottom'
     }, options||{}), activate_type, activate_event;
     set.selector = set.selector || '.popr';
@@ -85,16 +85,18 @@ $.fn.popr2 = function( options ) {
     $(this).on(activate_event, set.selector, function(event) {
         event.stopPropagation( );
         if ( activate_type !== event.type ) return false;
-        var el = this, $el = $(el);
+        var el = this, $el = $(el), popr_class, attr_class = '', attr_mode, d_m;
         $('.popr_container').remove( );
 
-        var d_m = set.mode, attr_mode = $el.attr('data-popr-mode');
-        if ( !!attr_mode ) d_m = attr_mode;
+        d_m = set.mode;
+        if ( !!(attr_mode = $el.attr('data-popr-mode')) ) d_m = attr_mode;
+        attr_class = $el.attr('data-popr-class');
+        popr_class = 'popr_container popr_container_' + d_m + (!!set['class'] ? ' '+set['class'] : '') + (!!attr_class ? ' '+attr_class : '');
 
-        var popr = $('<div class="popr_container popr_container_' + d_m + '"><div class="popr_content">' + $('#' + $el.attr(set.attribute)).html( ) + '</div></div>').appendTo('body');
+        var popr = $('<div class="'+popr_class+'"><div class="popr_content">' + $('#' + $el.attr(set.attribute)).html( ) + '</div></div>').appendTo('body');
         popr[0]._popr_target = el;
         
-        popr_adjust( popr, el ).fadeIn( set.speed );
+        popr_adjust( popr, el );
         
         if ( !global_handler_added )
         {
@@ -102,28 +104,30 @@ $.fn.popr2 = function( options ) {
                 // outside click or ESC key pressed
                 var $el = $(evt.target);
                 if ( ('keyup' === evt.type && 27 === evt.which) ||
-                    ('mouseup' === evt.type && ($el.parent('.popr_content').length || !$el.closest('.popr_container').length)) 
+                    ('mouseup' === evt.type && (($el.is('a,label,.popr-item') && $el.parent('.popr_content').length) || !$el.closest('.popr_container').length)) 
                 )
                 {
                     $('body').off('mouseup.popr2 keyup.popr2');
                     global_handler_added = false;
                     setTimeout(function( ) {
                         $('.popr_container').remove( );
-                    }, 40);
+                    }, 10);
                 }
             });
             global_handler_added = true;
         }
+        
+        popr.addClass('popr_visible');
     });
     
-    /*if ( !window_resize_added )
+    if ( !window_resize_added )
     {
-        $('window').on('resize.popr2', function popr_resize( evt ){
+        $(window).on('resize.popr2', function popr_resize( evt ){
             $('.popr_container').each(function( ){
                 popr_adjust( $(this), this._popr_target );
             });
         });
         window_resize_added = true;
-    }*/
+    }
 };
 }(jQuery);
