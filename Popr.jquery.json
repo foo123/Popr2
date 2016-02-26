@@ -1,12 +1,12 @@
 {
-     "name": "Popr",
-     "title": "Popr",
+     "name": "Popr2",
+     "title": "Popr2",
      "description": "Popr is a small and simple popup menu jQuery plugin.",
      "keywords": [
           "popup",
           "menu"
      ],
-     "version": "1.0.0",
+     "version": "2.0.0",
      "author": {
           "name": "Tipue",
           "url": "http://www.tipue.com"
