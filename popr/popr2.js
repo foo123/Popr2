@@ -88,7 +88,7 @@ $.fn.popr2 = function( options ) {
         activate_event = set.activate + '.popr2box mouseup.popr2box';
         activate_type = set.activate;
     }
-    $(this).on(activate_event, set.selector, function(event) {
+    $(this).off(activate_event).on(activate_event, set.selector, function(event) {
         event.stopPropagation( );
         if ( activate_type !== event.type ) return false;
         var el = this, $el = $(el), content, popr_class, attr_class = '', attr_mode, d_m;
@@ -127,7 +127,7 @@ $.fn.popr2 = function( options ) {
     
     if ( !window_resize_added )
     {
-        $(window).on('resize.popr2', function popr_resize( evt ){
+        $(window).off('resize.popr2').on('resize.popr2', function popr_resize( evt ){
             // slight delay
             setTimeout(function( ){
             $('.popr_container').each(function( ){ popr_adjust( $(this), this._popr_target ); });
